@@ -25,17 +25,42 @@ The @Table annotation specifies the name of the database table to be used for ma
 public class Loan {
 
   @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Loan(name="id")
-    private Long id;
-
-   @Loan(name="Customer id")
-    private String Customer id;
+   @GeneratedValue(strategy=GenerationType.IDENTITY)
+   @Loan(name="Customerid")
+    private String Customerid;
 
    @Loan(name="Branch")
     private String Branch;
 
-    @Loan(name="Loan Amount")
-    private String Loan Amount;
+    @Loan(name="LoanAmount")
+    private String LoanAmount;
   
+       public Customer id() {
+        super();
+      }
+
+      public String getCustomerid() {
+        return Customerid;
+      }
+
+      public void setCustomerid(Long id) {
+        this.Customerid = Customerid;
+      }
+      
+      public String getBranch() {
+        return Branch;
+      }
+
+      public void setBranch(string Branch) {
+        this.Branch = Branch;
+      }
+
+
+      public Long getLoanAmount() {
+        return LoanAmount;
+      }
+
+      public void setLoanAmount(Long LoanAmount) {
+        this.LoanAmount = LoanAmount;
+      }
 }
