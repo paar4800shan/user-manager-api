@@ -1,6 +1,6 @@
 package com.wellsfargo.training.globalbank.model;
 
-mport java.nio.charset.StandardCharsets;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Base64;
 
@@ -26,36 +26,27 @@ public class Loan {
 
   @Id
    @GeneratedValue(strategy=GenerationType.IDENTITY)
-   @Loan(name="Customerid")
-    private String Customerid;
+   @Column(name="Customerid")
+    private long Customerid;
 
-   @Loan(name="Branch")
+   @Column(name="Branch")
     private String Branch;
 
-    @Loan(name="LoanAmount")
-    private String LoanAmount;
-  
-       public Customer id() {
-        super();
-      }
+    @Column(name="LoanAmount")
+    private long LoanAmount;
 
-      public String getCustomerid() {
+      public long getCustomerid() {
         return Customerid;
       }
-
-      public void setCustomerid(Long id) {
+      public void setCustomerid(long Customerid) {
         this.Customerid = Customerid;
       }
-      
       public String getBranch() {
         return Branch;
       }
-
       public void setBranch(string Branch) {
         this.Branch = Branch;
       }
-
-
       public Long getLoanAmount() {
         return LoanAmount;
       }
