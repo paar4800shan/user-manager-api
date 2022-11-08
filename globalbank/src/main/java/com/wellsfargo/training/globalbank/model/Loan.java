@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 //import javax.persistence.OneToMany;
-//import javax.persistence.OneToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 
@@ -33,8 +33,9 @@ public class Loan {
   @JoinColumn(name="customerid", referencedColumnName="id")
   private Customer customer;
   
-   @Column(name="Branch")
-    private String branch;
+   @OneToOne(cascade = CascadeType.ALL)
+   @JoinColumn(name="Branchid", referencedColumnName="id")
+    private Branch branch;
 
     @Column(name="LoanAmount")
     private Long loanAmount;
@@ -47,15 +48,12 @@ public class Loan {
 		this.loanId = loanId;
 	}
 
-	public Long getCustomerID() {
-		return customer.getId();
-	}
-	public String getBranch() {
-		return branch;
+	public Customer getCustomer() {
+		return customer;
 	}
 
-	public void setBranch(String branch) {
-		this.branch = branch;
+	public Branch getBranch() {
+		return branch;
 	}
 
 	public Long getLoanAmount() {
@@ -65,7 +63,10 @@ public class Loan {
 	public void setLoanAmount(Long loanAmount) {
 		this.loanAmount = loanAmount;
 	}
-
+	   
+	public void setBranch(Branch branch) {
+		this.branch =  branch;
+	}
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
 	}
