@@ -108,7 +108,7 @@ public class LoginController {
 
 			 final String jwt = jwtUtil.generateToken(customerid);
 			 System.out.println(jwt);
-			 return new ResponseEntity<>(jwt, HttpStatus.OK);
+			 return new ResponseEntity<>(String.format("%s;;;%s",customerid,jwt), HttpStatus.OK);
 //        	 req.getSession().setAttribute("user",d.get().getFirstName());    // creating a session
 //
 //             mav = new ModelAndView("Operations");
