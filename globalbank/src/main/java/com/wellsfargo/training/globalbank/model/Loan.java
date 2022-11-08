@@ -65,4 +65,8 @@ public class Loan {
 	public void setLoanAmount(Long loanAmount) {
 		this.loanAmount = loanAmount;
 	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
 }

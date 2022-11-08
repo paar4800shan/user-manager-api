@@ -9,8 +9,11 @@ import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.wellsfargo.training.globalbank.util.JwtUtil;
 import org.aspectj.weaver.NewConstructorTypeMunger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +32,7 @@ import com.wellsfargo.training.globalbank.model.Customer;
 import com.wellsfargo.training.globalbank.model.Transaction;
 import com.wellsfargo.training.globalbank.service.LoginService;
 import com.wellsfargo.training.globalbank.service.TransactionService;
+
 
 
 @RestController
@@ -61,9 +65,9 @@ public class LoginController {
 	// PostRequest --> Controller ---> Service--> DealerRepository--> JPA Repository --> Database
     // DealerRepository--> Service ---> Controller ---> Response(views- jsp)
 	@PostMapping("/saveCustomer")
-	public Customer saveCustomer(@RequestBody Customer customer) { 
+	public Long saveCustomer(@RequestBody Customer customer) {
         lservice.saveCustomer(customer); 
-        return customer;
+        return customer.getId();
 	}
 	
 	@GetMapping("/login")
@@ -72,7 +76,10 @@ public class LoginController {
 	}
 	
 	@PostMapping("/loginCustomer")
-	public ModelAndView loginCustomer(HttpServletRequest req,@ModelAttribute("customer") Customer customer) throws ParseException {
+	public ResponseEntity loginCustomer(HttpServletRequest req,@ModelAttribute("customer") Customer customer) throws ParseException {
+
+		JwtUtil jwtUtil = new JwtUtil();
+		
 		StringBuilder jb = new StringBuilder();
 		String line = null;
 		try {
@@ -98,18 +105,23 @@ public class LoginController {
         	 mav.addObject("error","Customer doesn't Exist");
          }
          else if(customerid==d.get().getId()&& pass2.equals(d.get().getPassword())){
-        	 req.getSession().setAttribute("user",d.get().getFirstName());    // creating a session
 
-             mav = new ModelAndView("Operations");
-             mav.addObject(d);
+			 final String jwt = jwtUtil.generateToken(customerid);
+			 System.out.println(jwt);
+			 return new ResponseEntity<>(jwt, HttpStatus.OK);
+//        	 req.getSession().setAttribute("user",d.get().getFirstName());    // creating a session
+//
+//             mav = new ModelAndView("Operations");
+//             mav.addObject(d);
          }
          else {
-        	 mav = new ModelAndView("login");
-             mav.addObject("error", "Invalid Password");
+			 return new ResponseEntity<>("Invalid Password", HttpStatus.BAD_REQUEST);
+        	 /*mav = new ModelAndView("login");
+             mav.addObject("error", "Invalid Password");*/
          }
-		return mav;
+		return new ResponseEntity<>("",HttpStatus.OK);
 	}
-	
+
 	private String encryptPass(String pass) {
         Base64.Encoder encoder = Base64.getEncoder();
         String normalString = pass;
