@@ -17,9 +17,6 @@ public class JwtUtil {
 
     public String extractUserId(String token) {
         String tokenData = extractClaim(token, Claims::getSubject);
-        if(!validateToken(token,Long.parseLong(tokenData))) {
-            // Throw Exception
-        }
         return tokenData;
     }
 

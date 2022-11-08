@@ -33,7 +33,7 @@ public class Loan {
   @JoinColumn(name="customerid", referencedColumnName="id")
   private Customer customer;
   
-   @OneToOne(cascade = CascadeType.ALL)
+   @OneToOne(cascade = CascadeType.MERGE)
    @JoinColumn(name="Branchid", referencedColumnName="id")
     private Branch branch;
 
