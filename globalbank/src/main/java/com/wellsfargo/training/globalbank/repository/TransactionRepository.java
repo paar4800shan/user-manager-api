@@ -18,8 +18,13 @@ import com.wellsfargo.training.globalbank.model.Transaction;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
-		
-	@Query(value = "SELECT t.amount t.date FROM  transaction t where t.customerid  = ?1 and t.transactionType = ?2 and t.date between ?3 and ?4", nativeQuery = true)
-	List<Transaction> findBetweenDates(long userid,String transactionType,Date tperiodfrom, Date tperiodto);
+
+//	@Query(value = "SELECT * FROM transaction t where t.customerid = ?1 and t.transactionType = ?2 and t.date between ?3 and ?4", nativeQuery = true)
+	@Query(value = "SELECT * FROM transaction t where t.customerid = ?1 and t.transactionType = ?2", nativeQuery = true)
+	List<Transaction> findBetweenDates(long userid,String transactionType);
 
 }
+
+//@Query(value = "SELECT t.amount, t.date FROM transaction t where t.customerid = ?1 and t.transactionType = ?2 and t.date between ?3 and ?4", nativeQuery = true)
+//List<Transaction> findBetweenDates(long userid,String transactionType,Date tperiodfrom, Date tperiodto);
+//@Query(value = "SELECT * FROM transaction t where t.customerid = ?1", nativeQuery = true)

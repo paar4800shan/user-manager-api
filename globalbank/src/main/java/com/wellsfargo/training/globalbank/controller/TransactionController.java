@@ -2,27 +2,21 @@ package com.wellsfargo.training.globalbank.controller;
 
 import java.io.BufferedReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.crypto.Data;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.wellsfargo.training.globalbank.model.Branch;
@@ -71,30 +65,37 @@ public class TransactionController {
 	
 	
 	 @RequestMapping(value = "/transactionProceed", method = RequestMethod.POST)
-	  public ResponseEntity transactionPost(@ModelAttribute("amount") long amount, @ModelAttribute("transactionType") String transactionType,@RequestHeader(value="Authorization") String token) {
+	  public ResponseEntity transactionPost(@RequestBody Transaction transaction, @RequestHeader(value="Authorization") String token) {
 		 Long userId = Long.parseLong(jwtUtil.extractUserId(token));
-		 if (transactionType.equalsIgnoreCase("Deposit")) {
+		 if (transaction.getTransactiontype().equalsIgnoreCase("Deposit")) {
 	            Optional<Customer> customer = lservice.findById(userId);
 	            Customer cust = customer.get();
-	            cust.setAccountBalance(cust.getAccountBalance()+amount);
+	            cust.setAccountBalance(cust.getAccountBalance()+transaction.getAmount());
+
+			 System.out.println("CUSTOMERRRR" + cust.getId());
 	            
 
 	            Date date = new Date();
-	            Transaction trans = new Transaction(cust,Math.random(), transactionType, cust.getAccountBalance(),date);
-	                txservice.saveTransaction(trans);
+				transaction.setDate(date);
+				transaction.setCustomer(customer.get());
+
+				txservice.saveTransaction(transaction);
 	        }
-			else if (transactionType.equalsIgnoreCase("Withdraw")) {
+			else if (transaction.getTransactiontype().equalsIgnoreCase("Withdraw")) {
 				Optional<Customer> customer = lservice.findById(userId);
 	            Customer cust = customer.get();
-	            Long balance = cust.getAccountBalance()-(amount);
+
+	            Long balance = cust.getAccountBalance()-(transaction.getAmount());
+
 	            if(balance < 0) {
 	            	 return new ResponseEntity<>("Insufficient Amount", HttpStatus.BAD_REQUEST);
-	            }          
-	           
+	            }
 
+				cust.setAccountBalance(balance);
 	            Date date = new Date();
-	            Transaction trans = new Transaction(cust,Math.random(), transactionType, cust.getAccountBalance(),date);
-	            txservice.saveTransaction(trans);
+				transaction.setDate(date);
+				transaction.setCustomer(cust);
+	            txservice.saveTransaction(transaction);
 			}
 			
 	       	 return new ResponseEntity<>("Transaction Success", HttpStatus.OK);
@@ -102,24 +103,50 @@ public class TransactionController {
 	       
 	    }
 	 
-	 @RequestMapping(value = "/transactionPeriod", method = RequestMethod.GET)
-	    public String txperiod(Model model) {
-	        model.addAttribute("transactionType", "");
-	        model.addAttribute("tperiodfrom", "");
-	        model.addAttribute("tperiodto", "");
-	        return "deposit";
-	    }
-	 
+//	 @RequestMapping(value = "/transactionPeriod", method = RequestMethod.GET)
+//	    public String txperiod(Model model) {
+//	        model.addAttribute("transactionType", "");
+//	        model.addAttribute("tperiodfrom", "");
+//	        model.addAttribute("tperiodto", "");
+//	        return "deposit";
+//	    }
+//
 		
-		 @RequestMapping(value = "/transactionPeriod", method = RequestMethod.POST)
-		  public ResponseEntity txperiodPost(@ModelAttribute("transactionType") String transactionType, @ModelAttribute("tperiodfrom") Date tperiodfrom,@ModelAttribute("tperiodto") Date tperiodto,@RequestHeader(value="Authorization") String token) {
+		 @RequestMapping(value = "/transactionPeriod", method = RequestMethod.GET)
+		  public ResponseEntity txperiodPost(@RequestParam("transactionType") String transactionType, @RequestParam("tperiodfrom") String tperiodfrom,@RequestParam("tperiodto") String tperiodto,@RequestHeader(value="Authorization") String token) throws ParseException {
+
+			 DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+//			 System.out.println(format.parse(tperiodfrom));
+//			 System.out.println(format.parse(tperiodto));// Sat Jan 02 00:00:00 GMT 2010
+
+			 Date formatted_tperiodfrom = format.parse(tperiodfrom);
+			 Date formatted_tperiodto = format.parse(tperiodto);
+
+			 Timestamp ts_tperiodfrom = new Timestamp(formatted_tperiodfrom.getTime());
+			 Timestamp ts_tperiodto = new Timestamp(formatted_tperiodto.getTime());
+
+			 System.out.println("TSS" + ts_tperiodfrom);
+			 System.out.println("TSS" + ts_tperiodto);
+
+			 Date final_from = new Date(ts_tperiodfrom.getTime());
+			 Date final_to = new Date(ts_tperiodto.getTime());
+
+			 System.out.println("FINAL FROM" + final_from);
+			 System.out.println("FINAL FROM" + final_to);
+
 			 Long userId = Long.parseLong(jwtUtil.extractUserId(token));
-			 List<Transaction> transaction = txservice.transactionPeriod(userId,transactionType,tperiodfrom,tperiodto);
+//			 List<Transaction> transaction = txservice.transactionPeriod(userId,transactionType,ts_tperiodfrom,ts_tperiodto);
+			 List<Transaction> transaction = txservice.transactionPeriod(userId,transactionType,ts_tperiodfrom,ts_tperiodto);
+//			 List<Transaction> transaction = txservice.transactionPeriod(userId,transactionType,new Date(),new Date());
 			 return new ResponseEntity<>(transaction, HttpStatus.OK);
 		    }
 			
 
 }
+
+// DB Format - 2022-11-09 23:03:48.819000
+//2022-11-08 00:00:00.0
 
 
 

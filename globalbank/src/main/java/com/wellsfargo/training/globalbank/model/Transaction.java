@@ -2,7 +2,7 @@ package com.wellsfargo.training.globalbank.model;
 
 
 
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,9 +21,9 @@ public class Transaction {
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="transid")
-    private double transid;
+    private Long transid;
 	
-	 @ManyToOne(cascade = CascadeType.ALL)
+	 @ManyToOne(cascade = CascadeType.MERGE)
 	 @JoinColumn(name="customerid", referencedColumnName="id")
 	 private Customer customer;
 
@@ -31,29 +31,20 @@ public class Transaction {
     private String transactiontype;
 
     @Column(name="amount")
-    private long amount;
+    private Long amount;
 
     @Column(name="date")
     private Date date;
    
+	public Transaction() {
 
-	public Transaction(Customer cust, double e, String transactiontype, long l,java.util.Date date2) {
+	}
+	public Transaction(String transactiontype, Long l,java.util.Date date2) {
 		super();
-		this.customer = cust;
-		this.transid = e;
+//		this.customer = cust;
 		this.transactiontype = transactiontype;
 		this.amount = l;
-		this.date = (Date) date2;
-	}
-
-
-	public double getTransid() {
-		return transid;
-	}
-
-
-	public void setTransid(double transid) {
-		this.transid = transid;
+		this.date = date2;
 	}
 
 
@@ -85,6 +76,11 @@ public class Transaction {
 	public void setDate(Date date) {
 		this.date = date;
 	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
 	
     
     
