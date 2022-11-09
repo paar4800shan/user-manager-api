@@ -89,16 +89,6 @@ public class Transaction {
     
     
 
-	@Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name="id")
-    private Long id;
-	
-	@Column(name="trans_type")
-	private String trans_type;
-	
-	@Column(name="amount")
-	private String amount;
 	
 	
 

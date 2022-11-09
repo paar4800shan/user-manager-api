@@ -42,7 +42,7 @@ public class TransactionService {
 	public List<Transaction> transactionPeriod(Long userId,String transactionType, Date tperiodto, Date tperiodfrom) {
 		// TODO Auto-generated method stub
 	
-		List<Transaction> txlist = txrepo.findBetweenDates(userId,tperiodfrom,tperiodto);
+		List<Transaction> txlist = txrepo.findBetweenDates(userId,transactionType,tperiodfrom,tperiodto);
 	    return	txlist;
 	}
 
