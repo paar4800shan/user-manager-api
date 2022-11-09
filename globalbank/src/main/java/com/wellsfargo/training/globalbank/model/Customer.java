@@ -32,10 +32,10 @@ public class Customer {
     private String occupation;
 
     @Column(name="first_name")
-    private String fname;
+    private String FirstName;
 
     @Column(name="last_name")
-    private String lname;
+    private String lastName;
 
     @Column(name="password")
     private String password;
@@ -44,17 +44,36 @@ public class Customer {
      @JsonFormat(pattern="yyyy-MM-dd")
      private Date dob;
 
-    @Column(name="phone")
-    private String phoneNo;
-    
-  
+    @Column(name="phoneNo")
+    private String contact;
 
     @Column(name="city")
     private String city;
+    
+    @Column(name="middle_name")
+    private String middleName;
+    
+    @Column(name="AccountBalance")
+    private long accountBalance;
+    
+    
+    
 
 	public Customer() {
 		super();
+		accountBalance = 0;
 	}
+	
+
+	public long getAccountBalance() {
+		return accountBalance;
+	}
+
+
+	public void setAccountBalance(long l) {
+		this.accountBalance = l;
+	}
+
 
 	public Long getId() {
 		return id;
@@ -73,20 +92,37 @@ public class Customer {
 		this.occupation = occupation;
 	}
 
-	public String getFname() {
-		return fname;
+
+	public String getFirstName() {
+		return FirstName;
 	}
 
-	public void setFname(String fname) {
-		this.fname = fname;
+	public void setFirstName(String firstName) {
+		FirstName = firstName;
 	}
 
-	public String getLname() {
-		return lname;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setLname(String lname) {
-		this.lname = lname;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getContact() {
+		return contact;
+	}
+
+	public void setContact(String contact) {
+		this.contact = contact;
+	}
+
+	public String getMiddleName() {
+		return middleName;
+	}
+
+	public void setMiddleName(String middleName) {
+		this.middleName = middleName;
 	}
 
 	public String getPassword() {
@@ -109,14 +145,6 @@ public class Customer {
 
 	public void setDob(Date dob) {
 		this.dob = dob;
-	}
-
-	public String getPhoneNo() {
-		return phoneNo;
-	}
-
-	public void setPhoneNo(String phoneNo) {
-		this.phoneNo = phoneNo;
 	}
 
 	public String getCity() {
