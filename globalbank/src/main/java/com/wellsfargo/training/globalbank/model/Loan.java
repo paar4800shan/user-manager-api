@@ -1,19 +1,19 @@
 package com.wellsfargo.training.globalbank.model;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
-import java.util.Base64;
 
-//import javax.persistence.CascadeType;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-//import javax.persistence.OneToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+//import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 /*
 The @Entity annotation specifies that the class is an entity and is mapped to a database table. 
@@ -25,33 +25,49 @@ The @Table annotation specifies the name of the database table to be used for ma
 public class Loan {
 
   @Id
-   @GeneratedValue(strategy=GenerationType.IDENTITY)
-   @Column(name="Customerid")
-    private long Customerid;
-
-   @Column(name="Branch")
-    private String Branch;
+  @GeneratedValue(strategy=GenerationType.IDENTITY)
+  @Column(name="Loanid")
+  private Long loanId;
+  
+  @ManyToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name="customerid", referencedColumnName="id")
+  private Customer customer;
+  
+   @OneToOne(cascade = CascadeType.MERGE)
+   @JoinColumn(name="Branchid", referencedColumnName="id")
+    private Branch branch;
 
     @Column(name="LoanAmount")
-    private long LoanAmount;
+    private Long loanAmount;
 
-      public long getCustomerid() {
-        return Customerid;
-      }
-      public void setCustomerid(long Customerid) {
-        this.Customerid = Customerid;
-      }
-      public String getBranch() {
-        return Branch;
-      }
-      public void setBranch(string Branch) {
-        this.Branch = Branch;
-      }
-      public Long getLoanAmount() {
-        return LoanAmount;
-      }
+	public Long getLoanId() {
+		return loanId;
+	}
 
-      public void setLoanAmount(Long LoanAmount) {
-        this.LoanAmount = LoanAmount;
-      }
+	public void setLoanId(Long loanId) {
+		this.loanId = loanId;
+	}
+
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public Branch getBranch() {
+		return branch;
+	}
+
+	public Long getLoanAmount() {
+		return loanAmount;
+	}
+
+	public void setLoanAmount(Long loanAmount) {
+		this.loanAmount = loanAmount;
+	}
+	   
+	public void setBranch(Branch branch) {
+		this.branch =  branch;
+	}
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
 }
