@@ -101,8 +101,9 @@ public class LoginController {
          Optional<Customer> d=lservice.findById(customerid); // Fetch record/object from Two Tables(Dealer & Address) based on emailId.
          
          if(d == null) {
-        	 mav=new ModelAndView("login");
-        	 mav.addObject("error","Customer doesn't Exist");
+		  return new ResponseEntity<>("Invalid Customer", HttpStatus.BAD_REQUEST);
+        	// mav=new ModelAndView("login");
+        	 //mav.addObject("error","Customer doesn't Exist");
          }
          else if(customerid==d.get().getId()&& pass2.equals(d.get().getPassword())){
 
