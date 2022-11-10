@@ -114,31 +114,19 @@ public class TransactionController {
 		
 		 @RequestMapping(value = "/transactionPeriod", method = RequestMethod.GET)
 		  public ResponseEntity txperiodPost(@RequestParam("transactionType") String transactionType, @RequestParam("tperiodfrom") String tperiodfrom,@RequestParam("tperiodto") String tperiodto,@RequestHeader(value="Authorization") String token) throws ParseException {
-
+			 System.out.println("FROM - " + tperiodfrom);
+			 System.out.println("TO - " + tperiodto);
 			 DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-//			 System.out.println(format.parse(tperiodfrom));
-//			 System.out.println(format.parse(tperiodto));// Sat Jan 02 00:00:00 GMT 2010
 
 			 Date formatted_tperiodfrom = format.parse(tperiodfrom);
 			 Date formatted_tperiodto = format.parse(tperiodto);
 
-			 Timestamp ts_tperiodfrom = new Timestamp(formatted_tperiodfrom.getTime());
-			 Timestamp ts_tperiodto = new Timestamp(formatted_tperiodto.getTime());
-
-			 System.out.println("TSS" + ts_tperiodfrom);
-			 System.out.println("TSS" + ts_tperiodto);
-
-			 Date final_from = new Date(ts_tperiodfrom.getTime());
-			 Date final_to = new Date(ts_tperiodto.getTime());
-
-			 System.out.println("FINAL FROM" + final_from);
-			 System.out.println("FINAL FROM" + final_to);
+			 if(formatted_tperiodfrom.after(formatted_tperiodto)) {
+				return new ResponseEntity("Invalid period of time",HttpStatus.BAD_REQUEST);
+			 }
 
 			 Long userId = Long.parseLong(jwtUtil.extractUserId(token));
-//			 List<Transaction> transaction = txservice.transactionPeriod(userId,transactionType,ts_tperiodfrom,ts_tperiodto);
-			 List<Transaction> transaction = txservice.transactionPeriod(userId,transactionType,ts_tperiodfrom,ts_tperiodto);
-//			 List<Transaction> transaction = txservice.transactionPeriod(userId,transactionType,new Date(),new Date());
+			 List<Transaction> transaction = txservice.transactionPeriod(userId,transactionType,formatted_tperiodfrom,formatted_tperiodto);
 			 return new ResponseEntity<>(transaction, HttpStatus.OK);
 		    }
 			

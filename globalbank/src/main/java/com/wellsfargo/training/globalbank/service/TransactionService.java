@@ -2,10 +2,9 @@ package com.wellsfargo.training.globalbank.service;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import javax.transaction.Transactional;
 
@@ -41,20 +40,33 @@ public class TransactionService {
 
 	
 
-	public List<Transaction> transactionPeriod(Long userId, String transactionType, Timestamp tperiodto, Timestamp tperiodfrom) {
+	public List<Transaction> transactionPeriod(Long userId, String transactionType, Date tperiodfrom, Date tperiodto) throws ParseException {
 		// TODO Auto-generated method stub
-		List<Transaction> txlist = txrepo.findBetweenDates(userId,transactionType);
-		System.out.println(txlist.get(0).getTransid());
-//		List<Transaction> results = new ArrayList<>();
-//
-//		for(Transaction transaction:txlist) {
-//			if(transaction.getDate().after(tperiodfrom) && transaction.getDate().before(tperiodto))
-//				results.add(transaction);
-//		}
 
-	    return	txlist;
+		List<Transaction> txlist = txrepo.findBetweenDates(userId,transactionType);
+		List<Transaction> results = new ArrayList<>();
+
+		for(Transaction transaction:txlist) {
+
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+			SimpleDateFormat strDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+
+			SimpleDateFormat output = new SimpleDateFormat("yyyy-MM-dd");
+			Date d = sdf.parse(strDate.format(transaction.getDate()));
+			String formattedTime = output.format(d);
+			Date finalDate = output.parse(formattedTime);
+
+			if(!tperiodfrom.after(finalDate) && !tperiodto.before(finalDate))
+				results.add(transaction);
+		}
+
+		System.out.println(results);
+
+	    return results;
 	}
 
 }
+
+
 
 
