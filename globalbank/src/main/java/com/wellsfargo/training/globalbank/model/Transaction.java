@@ -52,6 +52,10 @@ public class Transaction {
 		return transactiontype;
 	}
 
+	public Long getTransid() {
+		return this.transid;
+	}
+
 
 	public void setTransactiontype(String transactiontype) {
 		this.transactiontype = transactiontype;

@@ -44,16 +44,13 @@ public class TransactionService {
 	public List<Transaction> transactionPeriod(Long userId, String transactionType, Timestamp tperiodto, Timestamp tperiodfrom) {
 		// TODO Auto-generated method stub
 		List<Transaction> txlist = txrepo.findBetweenDates(userId,transactionType);
-		System.out.println(txlist);
-		List<Transaction> results = new ArrayList<>();
-
-		for(Transaction transaction:txlist) {
-			System.out.println("FOR - " + transaction.getDate());
-			System.out.println(transaction.getDate().after(tperiodfrom) && transaction.getDate().before(tperiodto));
-			System.out.println(transaction.getDate().getClass().getName());
-			if(transaction.getDate().after(tperiodfrom) && transaction.getDate().before(tperiodto))
-				results.add(transaction);
-		}
+		System.out.println(txlist.get(0).getTransid());
+//		List<Transaction> results = new ArrayList<>();
+//
+//		for(Transaction transaction:txlist) {
+//			if(transaction.getDate().after(tperiodfrom) && transaction.getDate().before(tperiodto))
+//				results.add(transaction);
+//		}
 
 	    return	txlist;
 	}
